@@ -1,0 +1,1 @@
+测试ChannelOption.RCVBUF_ALLOCATOR参数
