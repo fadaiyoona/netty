@@ -18,7 +18,7 @@ import java.nio.charset.Charset;
 public class TestLengthDecoder {
     public static void main(String[] args) {
         EmbeddedChannel channel = new EmbeddedChannel(
-                new LengthFieldBasedFrameDecoder(1024,0,4,0,4),
+                new LengthFieldBasedFrameDecoder(1024,4,4,5,0),
                 new LoggingHandler(LogLevel.DEBUG),
                 new ChannelInboundHandlerAdapter(){
                     @Override
@@ -30,9 +30,14 @@ public class TestLengthDecoder {
         );
 
         ByteBuf buf = ByteBufAllocator.DEFAULT.buffer();
+        buf.writeBytes("sync".getBytes());
         buf.writeInt(12);
-        buf.writeBytes("hello, world".getBytes());
+        buf.writeBytes("head2".getBytes());
+        buf.writeBytes("hello, ".getBytes());
+        buf.writeBytes("world".getBytes());
+        buf.writeBytes("sync".getBytes());
         buf.writeInt(6);
+        buf.writeBytes("head2".getBytes());
         buf.writeBytes("你好".getBytes());
         channel.writeInbound(buf);
     }
